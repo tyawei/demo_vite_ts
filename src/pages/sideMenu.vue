@@ -1,45 +1,52 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref, computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { getSessionStorage } from '../utils/util'
 import { Location } from '@element-plus/icons-vue'
 import routerObj from '../router'
-import store from '../store'
+import { useStore } from 'vuex'
 
 const router = useRouter()
-const active = (computed(() => store.state.tabmenu.activeTab)).value
+const store = useStore()
+const route = useRoute()
+const active = computed(() => store.state.tabmenu.activeTab)
 
-let menuList = ref([])
-onMounted(() => {
-  try {
-    menuList.value = store.state.menu.menu_list
-
-console.log('active==>', store.state.tabmenu,  JSON.parse(JSON.stringify(menuList.value)))
-
-
-  } catch (e) {console.log(e)}
+const activeVal = computed({
+  get: () => {
+    if ( active.value ) {
+      return active.value
+    } else {
+      return route.path
+    }
+  },
 })
+
+let menuList = computed(() => store.state.menu.menu_list).value
+// onMounted(() => {
+//   try {
+//     menuList.value = store.state.menu.menu_list
+//   } catch (e) {console.log(e)}
+// })
 const handleOpen = (item) => {
-  console.log('open==>', item)
+  // console.log('open==>', item)
 }
 const handleClose = (item) => {
-  console.log('close==>', item)
+  // console.log('close==>', item)
 
 }
 const handleSelect = (item) => {
-  console.log('select==>', item)
+  // console.log('select==>', item)
 
 }
 const menuItemClick = (item) => {
   router.push(item.index)
-  console.log('item_click==>', item.index)
 }
 </script>
 <template>
   <div class="side_menu">
     <router-link class="logo" to="/home">LOGO</router-link>
     <el-menu class="el-menu-vertical-demo"
-        :default-active="active || '/home/welcome'"
+        :default-active="activeVal"
         @open="handleOpen"
         @close="handleClose"
         @select="handleSelect"

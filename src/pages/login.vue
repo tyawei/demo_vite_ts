@@ -42,8 +42,8 @@ const submitLogin = formEl => {
     if (valid) {
       login_loading.value = true
       const result = await http_login('/login', { ...ruleForm })
-      if ( result && result.token ) {
-        setSessionStorage('token', result.token)
+      if ( result.data && result.data.token ) {
+        setSessionStorage('token', result.data.token)
       }
       login_loading.value = false
       formEl.resetFields()

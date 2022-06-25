@@ -6,7 +6,7 @@ interface IMenu {
 }
 
 export interface ISonMenu extends IMenu {
-  children?: IMenu
+  children?: Array<IMenu>
 }
 
 interface IResponse {

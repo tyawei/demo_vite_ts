@@ -32,13 +32,11 @@ export default {
         }
       }
       if ( !existFlag ) {
+        console.log( 'list==========', list, route.path )
         commit('addTab', route)
         commit('setActiveTab', route)
         return false
       } 
-
-      
-
     }
   }
 }

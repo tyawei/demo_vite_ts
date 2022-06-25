@@ -59,7 +59,7 @@ request.interceptors.response.use((res: AxiosResponse) => {
             })
             break;
     }
-    return res.data?.data
+    return res.data
 }, err => {
     console.log('请求失败==>', err);
 })

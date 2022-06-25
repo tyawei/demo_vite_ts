@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { getSessionStorage, setSessionStorage } from '../utils/util'
 import { http_getmenu } from '../api/menu'
-import { ISonMenu } from '../api/i_http'
+import { ISonMenu, IMenuListRes } from '../api/i_http'
 import store from '../store'
 
 
@@ -39,12 +39,12 @@ const router = createRouter({
 
 let asyncRouteFlag = false
 
-function addRoutes(menuList = [], saveList = []) {
-  let childrenList: Array<RouteRecordRaw> = []
-  menuList.forEach((menu, ind) => {
+function addRoutes(menuList: Array<ISonMenu> = [], saveList: Array<ISonMenu> = []) {
+  let childrenList: Array<ISonMenu> = []
+  menuList.forEach((menu: ISonMenu, ind: number) => {
     const { children, name, path } = menu
-    let route = {}
-    if ( children?.length ) {
+    let route: any = {}
+    if ( children && children.length ) {
       childrenList = childrenList.concat(children)
     } 
     route = { 
@@ -58,7 +58,7 @@ function addRoutes(menuList = [], saveList = []) {
     addRoutes(childrenList, saveList)
   } else {
     // 避免右侧页面是一个单独整个页面（缺少左侧菜单，此刻二级菜单下的页面和home同级了，自然不应该这样，如下注释代码）
-    homeRoute.children = homeRoute.children.concat(saveList)
+    homeRoute.children = homeRoute.children && homeRoute.children.concat(saveList)
     // saveList.length && saveList.forEach(save => {
     //   router.addRoute(save)
     // })
@@ -70,12 +70,15 @@ function addRoutes(menuList = [], saveList = []) {
 router.beforeEach(async (to, from, next) => {
   if (getSessionStorage('token')) {
     if (!asyncRouteFlag) {
-      const data = await http_getmenu('/get_menu', {}).catch(e=>{console.log(e)})
-      // console.log(data.)
+      const data: IMenuListRes = await http_getmenu('/get_menu', {}).catch(e=>{console.log(e)})
+      // console.log('data==>', data)
+      let menu_list: ISonMenu[] = []
+      if ( data ) {
+        menu_list = data.data.menu_list
+      }
 
-      let menu_list = data?.data?.data?.menu_list
+      // let menu_list = data.menu_list
 
-      // const { menu_list } = await http_getmenu('/get_menu', {})
       console.log('接口menuList==>', menu_list)
       // 菜单数据不需要响应，完全可以用本地缓存
       // setSessionStorage('menu_list', JSON.stringify(menu_list))

@@ -8,11 +8,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vue/compiler-sfc": "^3.2.37",
     "axios": "^0.27.2",
     "element-plus": "^2.0.1",
     "mockjs": "^1.1.0",
     "path-browserify": "^1.0.1",
     "vite-plugin-mock": "^2.9.6",
+    "vite-plugin-precise-arithmetic": "^1.0.5",
+    "vite-plugin-replace-json": "^1.0.1",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue": "^3.2.25",
     "vue-router": "^4.0.13",
     "vuex": "^4.0.2"

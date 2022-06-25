@@ -5,12 +5,15 @@ import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-
+import myExample from './src/plugins/vite-plugin-my-example'  
 
 export default defineConfig(({ command, mode }) => {
   return {
     plugins: [
       vue(),
+
+myExample(),
+
       AutoImport({
         resolvers: [ElementPlusResolver()],
       }),

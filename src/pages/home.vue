@@ -1,24 +1,40 @@
 <script setup>
-import { reactive, computed, onMounted, onBeforeMount } from 'vue'
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
-import store from '../store'
+import { reactive, computed, onMounted, onBeforeMount, defineComponent, watch, ref } from 'vue'
+import { onBeforeRouteUpdate, useRoute, useRouter,  } from 'vue-router'
+import { useStore } from 'vuex'
 import SideMenu from './sideMenu.vue'
 
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 
 const tabbars = computed(() => store.state.tabmenu.tabmenu_list)
-const editTabsValue = (computed(() => store.state.tabmenu.activeTab)).value
+const activeTab = computed(() => store.state.tabmenu.activeTab)
+
+const bbb = ref(1)
+
+const editTabsValue = computed({
+  get: () => {
+    if ( activeTab.value ) {
+      return activeTab.value
+    } else {
+      return route.path
+    }
+  }
+})
+
+console.log('route=', route, tabbars, router, store, bbb)
+
 const tabClick = tab => {
-  console.log('tab=>', {...tab}, JSON.parse(JSON.stringify(tabbars.value)))
-  router.push({ name: tab.paneName })
+  router.push(tab.paneName)
 }
 
 onBeforeRouteUpdate(to => {
+  // console.log('beforeRouteUpdate', JSON.parse(JSON.stringify(to)))
   store.dispatch('tabmenu/changeRouteHandler', to)
 })
 onBeforeMount(() => {
-  console.log('mounted', JSON.parse(JSON.stringify(route)))
+  // console.log('beforemounted', JSON.parse(JSON.stringify(route)))
   store.dispatch('tabmenu/changeRouteHandler', route)
 })
 
@@ -41,7 +57,7 @@ onBeforeMount(() => {
               v-for="item in tabbars"
               :key="item.path"
               :label="item.name"
-              :name="item.name"
+              :name="item.path"
             >
             </el-tab-pane>
           </el-tabs>
